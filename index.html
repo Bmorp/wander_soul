@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wandersoul | Premium Global Travel Agency</title>
+    <!-- Premium Typefaces -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0B1F33; /* Deep Navy */
+            --surface: #102A43; /* Secondary Surface Navy */
+            --accent: #F5E6C8; /* Warm Off-White Text */
+            --accent-muted: rgba(245, 230, 200, 0.6); /* Muted Warm Off-White */
+            --gold: #D4AF37; /* More Vibrant Gold */
+            --gold-soft: #F1D382; /* Brighter Gold Highlight */
+            --text-muted: rgba(230, 194, 122, 0.65); /* Muted Gold Text */
+            --gold-glow: rgba(207, 175, 109, 0.2);
+            --radius: 32px;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+            --transition: all 0.6s var(--ease);
+        }
+
+        /* Premium Package Cards Styling */
+        #signature { padding: 120px 5% 150px; }
+        .signature-grid { display: flex; flex-direction: column; gap: 60px; max-width: 1300px; margin: 0 auto; }
+
+        .package-card {
+            position: relative;
+            height: clamp(600px, 85vh, 800px);
+            border-radius: 40px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.8s var(--ease);
+        }
+
+        .package-card:hover { transform: scale(0.98); }
+        
+        .package-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            transition: transform 1.5s var(--ease);
+            filter: brightness(0.6) saturate(1.1);
+        }
+        .package-card:hover .package-bg { transform: scale(1.08); filter: brightness(0.5) saturate(1.2); }
+
+        .package-content {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            width: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .package-label {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s var(--ease);
+        }
+
+        .package-title {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: clamp(3.5rem, 15vw, 10rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -4px;
+            line-height: 0.85;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: scale(0.92) translateY(30px);
+            transition: all 1s var(--ease) 0.1s;
+        }
+
+        .package-price-box {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: rgba(16, 42, 67, 0.4);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(230, 194, 122, 0.2);
+            padding: 25px 45px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--ease) 0.2s;
+        }
+
+        .price-text { font-size: 32px; font-weight: 800; color: var(--gold); }
+        .price-sub { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
+
+        .package-amenities {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s var(--ease) 0.3s;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .amenity {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 8px 18px;
+            border: 0.5px solid rgba(245, 230, 200, 0.15);
+            border-radius: 100px;
+            background: rgba(245, 230, 200, 0.05);
+        }
+
+        /* Active Reveal State */
+        .package-card.in-view .package-label,
+        .package-card.in-view .package-title,
+        .package-card.in-view .package-price-box,
+        .package-card.in-view .package-amenities {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Basic Resets */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        html, body { overflow-x: hidden; background: var(--bg); color: var(--accent); font-family: 'Outfit', sans-serif; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+        h1, h2, h3 { font-family: 'Bricolage Grotesque', sans-serif; line-height: 0.85; }
+
+        /* Dynamic Island Navbar Updates */
+        nav {
+            position: fixed;
+            top: var(--nav-top, 25px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: var(--nav-width, 45%);
+            max-width: 800px;
+            height: var(--nav-height, 64px);
+            background: rgba(16, 42, 67, var(--nav-bg-opacity, 0.7)); /* Using --surface navy */
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 0.8px solid rgba(230, 194, 122, 0.15); /* Soft Gold border */
+            border-bottom-color: rgba(230, 194, 122, 0.08);
+            border-radius: var(--nav-radius, 40px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px 0 25px;
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        top 0.4s var(--ease), 
+                        border-radius 0.4s var(--ease), 
+                        height 0.4s var(--ease);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0.5px 0 rgba(230, 194, 122, 0.1); 
+            overflow: hidden;
+        }
+
+        .logo { 
+            font-size: 17px; font-weight: 800; letter-spacing: -0.5px; text-transform: lowercase; 
+            white-space: nowrap; transition: 0.4s var(--ease);
+        }
+        
+        .nav-items { 
+            display: flex; align-items: center; 
+            gap: var(--nav-gap, 4px); 
+            transition: gap 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-link { 
+            font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent-muted); 
+            text-decoration: none; padding: 10px 12px; transition: 0.3s var(--ease);
+            white-space: nowrap;
+        }
+        .nav-link:not(.cta) {
+            opacity: var(--nav-items-opacity, 0);
+            pointer-events: var(--nav-items-pointer, none);
+            filter: blur(calc(5px * (1 - var(--nav-items-opacity)))); /* Soft reveal blur */
+        }
+        .nav-link:hover { color: var(--gold); }
+        .nav-link.cta { 
+            background: var(--gold); color: var(--bg); border-radius: 40px; padding: 10px 22px; 
+            box-shadow: 0 4px 15px rgba(207, 175, 109, 0.2); 
+            font-size: 10px; letter-spacing: 1.5px;
+            margin-left: 5px;
+        }
+
+        /* Footer Styling */
+        footer {
+            padding: 120px 8% 60px;
+            background: var(--bg);
+            border-top: 0.5px solid rgba(207, 175, 109, 0.1);
+            margin-top: 100px;
+        }
+
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-logo { font-size: 32px; font-weight: 800; letter-spacing: -2px; text-transform: lowercase; margin-bottom: 20px; }
+        .footer-mission { font-size: 18px; color: var(--accent-muted); max-width: 500px; line-height: 1.6; font-weight: 300; margin-bottom: 60px; }
+        
+        .footer-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 80px; }
+        .link-group { display: flex; flex-direction: column; gap: 15px; }
+        .link-title { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+        .link-group a { color: var(--accent); text-decoration: none; font-size: 15px; transition: color 0.3s ease; }
+        .link-group a:hover { color: var(--gold); }
+
+        .footer-bottom { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding-top: 40px; border-top: 0.5px solid rgba(230, 194, 122, 0.1);
+            font-size: 10px; letter-spacing: 2px; color: var(--text-muted);
+        }
+
+        /* Signature Stacking (Unique Layout) */
+        #signature { 
+            padding: 120px 5% 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .signature-deck {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 15vh; /* Breathable spacing for stacking */
+            padding-bottom: 200px;
+        }
+
+        .package-card {
+            position: sticky;
+            top: 100px;
+            height: clamp(550px, 75vh, 750px);
+            border-radius: 40px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.6s var(--ease), filter 0.8s var(--ease);
+            box-shadow: 0 -20px 60px rgba(0,0,0,0.4);
+            background: var(--surface);
+        }
+        
+        /* Staggered stack effect top offsets */
+        .package-card:nth-child(1) { top: 100px; z-index: 10; }
+        .package-card:nth-child(2) { top: 130px; z-index: 11; }
+        .package-card:nth-child(3) { top: 160px; z-index: 12; }
+
+        .package-video-wrap {
+            position: absolute; inset: 0; z-index: 1;
+            overflow: hidden; pointer-events: none;
+        }
+        .package-video {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: brightness(0.5);
+            transition: transform 1.5s var(--ease);
+        }
+        .package-card:hover .package-video { transform: scale(1.1); filter: brightness(0.4); }
+
+        .package-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(16, 42, 67, 0) 0%, rgba(16, 42, 67, 0.4) 100%);
+            z-index: 2;
+        }
+
+        .package-content {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            width: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto; /* Enable buttons inside */
+        }
+
+        .package-title {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: clamp(3.5rem, 12vw, 9rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            line-height: 0.85;
+            margin-bottom: 30px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .btn-view-itinerary {
+            margin-top: 30px;
+            padding: 18px 35px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-view-itinerary:hover { 
+            background: var(--gold); 
+            color: var(--bg); 
+            border-color: transparent;
+            transform: translateY(-5px);
+        }
+
+        /* Itinerary Overlay (Premium) */
+        #itineraryOverlay {
+            position: fixed; z-index: 5000; inset: 0;
+            background: rgba(11, 31, 51, 0.85); /* Deep Navy semi-transparent */
+            backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: all 0.6s var(--ease); overflow-y: auto;
+            padding: 100px 8% 100px;
+        }
+        #itineraryOverlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+
+        .itin-header { max-width: 900px; margin: 0 auto 80px; text-align: center; }
+        .itin-dest { font-size: clamp(3rem, 10vw, 6rem); font-weight: 800; letter-spacing: -2px; text-transform: uppercase; margin-bottom: 20px; }
+        
+        .itin-days-scroll { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 60px; }
+        .itin-day-card { 
+            position: relative; padding-left: 60px; 
+            opacity: 0; transform: translateY(40px);
+            transition: all 0.8s var(--ease);
+        }
+        .itin-day-card.active { opacity: 1; transform: translateY(0); }
+        .itin-day-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: -60px;
+            width: 1px; background: linear-gradient(var(--gold), transparent);
+        }
+        .itin-day-card:last-child::before { display: none; }
+        
+        .day-num {
+            position: absolute; left: -15px; top: 0; width: 32px; height: 32px;
+            background: var(--gold); border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; color: var(--bg);
+            font-weight: 800; font-size: 13px; box-shadow: 0 0 20px rgba(207, 175, 109, 0.4);
+        }
+        .day-title { font-size: 24px; font-weight: 700; color: var(--gold-soft); margin-bottom: 12px; }
+        .day-body { font-size: 16px; color: var(--accent-muted); line-height: 1.8; font-weight: 300; }
+
+        .close-itin {
+            position: fixed; top: 40px; right: 40px; width: 56px; height: 56px;
+            background: rgba(16, 42, 67, 0.5); border: 0.5px solid rgba(230, 194, 122, 0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 5100; transition: 0.3s;
+        }
+        .close-itin:hover { background: var(--gold); }
+        .close-itin:hover svg { stroke: var(--bg); }
+
+        @media (max-width: 768px) {
+            .signature-deck { gap: 10vh; }
+            .package-card { height: clamp(450px, 70vh, 550px); top: 80px !important; }
+            .itineraryOverlay { padding: 80px 5%; }
+            .close-itin { top: 20px; right: 20px; width: 44px; height: 44px; }
+        }
+
+        /* Trust & Soul Stories Styles */
+        #trust { padding: 120px 8%; background: var(--bg); text-align: center; }
+        .trust-stats { 
+            display: grid; grid-template-columns: repeat(3, 1fr); 
+            gap: 40px; max-width: 1000px; margin: 0 auto 100px;
+        }
+        .stat-card { padding: 20px; }
+        .stat-num { font-size: 56px; font-weight: 800; color: var(--gold); margin-bottom: 10px; font-family: 'Bricolage Grotesque'; }
+        .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-muted); }
+
+        .trust-partners {
+            display: flex; justify-content: center; align-items: center; gap: 60px;
+            flex-wrap: wrap; opacity: 0.5; filter: grayscale(1); transition: 0.6s var(--ease);
+        }
+        .trust-partners:hover { opacity: 0.8; filter: grayscale(0.2); }
+        .partner-logo { font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--accent-muted); text-transform: uppercase; }
+
+        #soul-stories { padding: 120px 0; background: var(--bg); overflow: hidden; }
+        .stories-container {
+            display: flex; gap: 30px; padding: 0 8%;
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding-bottom: 30px; /* Space for scrollbar */
+        }
+        .stories-container::-webkit-scrollbar { 
+            height: 4px; 
+        }
+        .stories-container::-webkit-scrollbar-track {
+            background: rgba(230, 194, 122, 0.05);
+            border-radius: 10px;
+        }
+        .stories-container::-webkit-scrollbar-thumb {
+            background: rgba(207, 175, 109, 0.3);
+            border-radius: 10px;
+        }
+        
+        #soul-stories { position: relative; padding: 120px 0; background: var(--bg); overflow: hidden; }
+        
+        .scroll-hint {
+            display: none;
+            position: absolute; right: 20px; top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            flex-direction: column; align-items: center; gap: 8px;
+            color: var(--gold);
+            pointer-events: none;
+            animation: bounceRight 2s infinite ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-hint { display: flex; }
+        }
+
+        @keyframes bounceRight {
+            0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.6; }
+            50% { transform: translateY(-50%) translateX(8px); opacity: 1; }
+        }
+
+        .story-card {
+            min-width: clamp(280px, 85vw, 500px);
+            scroll-snap-align: center;
+            background: rgba(16, 42, 67, 0.4);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(230, 194, 122, 0.15);
+            border-radius: 40px; padding: 40px 30px;
+            display: flex; flex-direction: column; gap: 20px;
+            transition: var(--transition);
+        }
+        .story-card:hover { border-color: var(--gold); transform: scale(1.02); }
+        
+        .quote-icon { font-size: 32px; color: var(--gold); opacity: 0.3; line-height: 1; margin-bottom: -10px; }
+        .story-text { font-size: 16px; line-height: 1.7; font-weight: 300; color: var(--accent); font-style: italic; }
+        .story-author { display: flex; align-items: center; gap: 20px; border-top: 0.5px solid rgba(230, 194, 122, 0.1); padding-top: 30px; }
+        .author-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--bg); font-size: 14px; }
+        .author-info { text-align: left; }
+        .author-name { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+        .author-trip { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+
+        @media (max-width: 768px) {
+            .trust-stats { grid-template-columns: 1fr; gap: 50px; }
+            .trust-partners { gap: 30px; }
+            .story-card { min-width: 85vw; padding: 40px 30px; scroll-snap-align: center; }
+        }
+
+        /* Discoveries Section (Bento Grid) */
+        #discoveries { padding: 120px 8%; background: var(--bg); }
+        .discovery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 350px);
+            gap: 20px;
+            max-width: 1400px; margin: 0 auto;
+        }
+
+        .discovery-card {
+            position: relative; border-radius: 32px; overflow: hidden;
+            background: var(--surface); border: 1px solid rgba(230, 194, 122, 0.1);
+            transition: var(--transition); cursor: pointer;
+        }
+        .discovery-card:hover { transform: translateY(-10px); border-color: rgba(230, 194, 122, 0.3); }
+        
+        .discovery-card.large { grid-column: span 2; grid-row: span 2; }
+        .discovery-card.wide { grid-column: span 2; }
+
+        .disc-img { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.4; transition: transform 1.2s var(--ease); }
+        .discovery-card:hover .disc-img { transform: scale(1.1); opacity: 0.6; }
+        
+        .disc-content { position: relative; z-index: 5; height: 100%; padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .disc-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); margin-bottom: 15px; }
+        .disc-title { font-size: 28px; font-weight: 800; line-height: 1.1; margin-bottom: 15px; font-family: 'Bricolage Grotesque'; }
+        .disc-excerpt { font-size: 14px; color: var(--accent-muted); opacity: 0; transform: translateY(20px); transition: all 0.5s var(--ease); }
+        .discovery-card:hover .disc-excerpt { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1024px) {
+            .discovery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+            .discovery-card.large, .discovery-card.wide { grid-column: span 2; }
+            .discovery-card { height: 400px; }
+        }
+        @media (max-width: 768px) {
+            .discovery-grid { grid-template-columns: 1fr; }
+            .discovery-card, .discovery-card.large, .discovery-card.wide { grid-column: span 1; height: 350px; }
+        }
+
+        /* Advanced Hero */
+        #hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 180px 8% 100px; /* Increased top padding to clear nav */
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .hero-video-wrap {
+            position: absolute; inset: 0; z-index: 1;
+            pointer-events: none;
+        }
+        .hero-video {
+            width: 100%; height: 100%; object-fit: cover;
+            display: block; opacity: 0.8; /* Ensure it's not fully transparent */
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(16, 42, 67, 0.3) 0%, rgba(16, 42, 67, 0.7) 60%, rgba(16, 42, 67, 0.9) 100%);
+            z-index: 2;
+        }
+
+        .volumetric-glow {
+            position: absolute;
+            top: 40%; left: 50%;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            z-index: 3; /* Behind text but on top of video/overlay if needed */
+            mix-blend-mode: overlay;
+            filter: blur(80px);
+            animation: breathe 8s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes breathe {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
+        }
+
+        .hero-title {
+            font-size: clamp(3.2rem, 9.5vw, 8.5rem);
+            font-weight: 800;
+            line-height: 0.95;
+            margin-bottom: 40px; /* Increased from 25px */
+            letter-spacing: -0.05em;
+            color: var(--accent);
+            text-transform: capitalize;
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes cinematicReveal {
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .hero-sub {
+            position: relative;
+            z-index: 10;
+            font-size: 1.25rem; /* Slightly larger */
+            color: var(--accent-muted);
+            max-width: 600px;
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 60px; /* More space to prevent 'sticking' to button */
+            opacity: 0;
+            transform: translateY(30px);
+            animation: cinematicReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s;
+        }
+
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* Trip Cards Grid */
+        #trips { padding: 100px 5% 150px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .section-label { grid-column: span 2; font-size: 12px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); opacity: 0.7; margin-bottom: 30px; text-align: center; }
+
+        .trip-card {
+            position: relative;
+            height: clamp(260px, 45vh, 360px);
+            border-radius: var(--radius);
+            overflow: hidden;
+            display: flex; align-items: flex-end; padding: 25px;
+            transition: transform 0.4s var(--ease);
+            cursor: pointer;
+        }
+
+        .trip-card:active { transform: scale(0.95); }
+        .trip-img { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 1; border-radius: inherit; transition: transform 1.2s var(--ease); }
+        .trip-card:hover .trip-img { transform: scale(1.1); }
+        .trip-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%); }
+
+        .trip-info { position: relative; z-index: 2; width: 100%; }
+        .trip-name { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+        .trip-stats { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); font-weight: 700; }
+
+        /* Expanding Overlay */
+        #overlay {
+            position: fixed; z-index: 3000; inset: 0;
+            background: var(--bg); pointer-events: none; opacity: 0; visibility: hidden;
+            overflow-y: auto; transition: opacity 0.5s var(--ease);
+        }
+
+        #overlay.active { pointer-events: auto; opacity: 1; visibility: visible; }
+
+        .overlay-header { position: relative; height: 55vh; width: 100%; }
+        .overlay-img { width: 100%; height: 100%; background-size: cover; background-position: center; border-radius: 0 0 40px 40px; }
+        
+        .overlay-close {
+            position: fixed; top: 30px; right: 30px; width: 48px; height: 48px;
+            background: rgba(16, 42, 67, 0.4); backdrop-filter: blur(25px); border: 0.5px solid rgba(207, 175, 109, 0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 3100;
+        }
+
+        .itinerary-wrap { padding: 50px 8%; max-width: 900px; margin: 0 auto; }
+        .itinerary-title { font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 15px; }
+        .itinerary-badges { display: flex; gap: 10px; margin-bottom: 45px; flex-wrap: wrap; }
+        .badge { padding: 8px 16px; border-radius: 20px; background: var(--surface); color: var(--gold); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+
+        .timeline-item { position: relative; padding-left: 45px; margin-bottom: 60px; opacity: 0; transform: translateY(30px); }
+        .timeline-item.active { opacity: 1; transform: translateY(0); transition: var(--transition); }
+        .timeline-item::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 100%; background: linear-gradient(transparent, var(--gold), transparent); }
+        .day-mark { position: absolute; left: -14px; top: 0; width: 30px; height: 30px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 900; font-size: 12px; box-shadow: 0 0 20px rgba(207, 175, 109, 0.3); }
+
+        .item-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: var(--gold-soft); }
+        .item-desc { font-size: 15px; color: var(--text-muted); line-height: 1.8; font-weight: 300; }
+
+        /* Heaven Modal Design */
+        #modal {
+            position: fixed; z-index: 4000; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(40px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: var(--transition); padding: 20px;
+        }
+
+        #modal.active { opacity: 1; visibility: visible; pointer-events: auto; }
+
+        .modal-card {
+            background: var(--surface);
+            border: 1px solid rgba(207, 175, 109, 0.15);
+            border-radius: var(--radius);
+            width: 100%; max-width: 500px; padding: 50px 40px;
+            transform: scale(0.9) translateY(40px);
+            transition: var(--transition);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        #modal.active .modal-card { transform: scale(1) translateY(0); }
+
+        .modal-close {
+            position: absolute; top: 20px; right: 20px; width: 44px; height: 44px;
+            background: rgba(16, 42, 67, 0.4); border: 0.5px solid rgba(230, 194, 122, 0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 4100; transition: 0.3s;
+        }
+        .modal-close:hover { background: var(--gold); }
+        .modal-close:hover svg { stroke: var(--bg); }
+
+        @media (max-width: 768px) {
+            .package-badge { top: 20px; left: 20px; font-size: 8px; padding: 6px 12px; }
+            .package-label { font-size: 10px; letter-spacing: 3px; margin-bottom: 15px; width: 80%; }
+            .package-title { font-size: 3rem; letter-spacing: -1px; margin-bottom: 20px; }
+            .package-price-box { padding: 15px 25px; margin-bottom: 25px; }
+            .price-text { font-size: 24px; }
+            .inclusion-row { gap: 25px; margin-top: 25px; }
+            .inclusion-item { gap: 8px; min-width: 60px; font-size: 8px; }
+            .inclusion-item svg { width: 20px; height: 20px; }
+            .package-content { padding: 20px; }
+
+            .modal-card { 
+                padding: 40px 25px; 
+                max-height: 85vh; 
+                overflow-y: auto; 
+                border-radius: 24px;
+                margin-top: 50px;
+            }
+            .modal-card h2 { font-size: 1.8rem; margin-bottom: 25px; }
+            .form-group { margin-bottom: 20px; }
+            .form-input { font-size: 16px; padding: 14px 0; }
+        }
+
+        .form-group { margin-bottom: 30px; position: relative; }
+        .form-label { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 12px; display: block; font-weight: 700; }
+        .form-input { 
+            width: 100%; padding: 18px 0; background: transparent; border: none; border-bottom: 1.5px solid rgba(207, 175, 109, 0.2); 
+            color: var(--accent); font-family: 'Outfit'; font-size: 18px; outline: none; transition: var(--transition);
+        }
+        .form-input:focus { border-color: var(--gold); }
+
+        .btn-luxe {
+            width: 100%; padding: 20px; background: var(--gold); color: var(--bg); border: none; border-radius: 40px;
+            font-family: 'Outfit'; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; 
+            cursor: pointer; transition: var(--transition); margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(207, 175, 109, 0.2);
+        }
+        .btn-luxe:active { transform: scale(0.95); }
+
+        /* Package Badges */
+        .package-badge {
+            position: absolute; top: 30px; left: 30px; z-index: 10;
+            background: var(--gold); color: var(--bg); padding: 8px 16px;
+            border-radius: 100px; font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .inclusion-row {
+            display: flex; justify-content: center; gap: 50px; margin-top: 40px;
+            opacity: 0.95;
+        }
+        .inclusion-item {
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            font-size: 10px; text-transform: uppercase; letter-spacing: 2.5px; color: var(--gold);
+            font-weight: 700; min-width: 90px;
+        }
+        .inclusion-item svg { width: 26px; height: 26px; stroke: var(--gold); stroke-width: 1.2; }
+
+
+        /* Desktop Nuances */
+        @media (min-width: 1024px) {
+            #trips { grid-template-columns: repeat(4, 1fr); padding: 100px 10% 200px; gap: 20px; }
+            .itinerary-wrap { padding: 100px 0; }            nav { height: 72px; padding: 0 10px 0 35px; }
+        }
+
+        .floating-cta {
+            position: fixed; bottom: 30px; right: 30px; z-index: 1000;
+            background: var(--gold); color: var(--bg); width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 30px rgba(207, 175, 109, 0.3); text-decoration: none;
+            transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+        }
+        .floating-cta:active { transform: scale(0.9); }
+
+        .btn-hero {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px; /* Added small buffer */
+            padding: 22px 50px;
+            background: var(--gold);
+            color: var(--bg);
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: cinematicReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.9s;
+            box-shadow: 0 15px 35px rgba(207, 175, 109, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        .btn-hero:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 45px rgba(207, 175, 109, 0.4);
+            background: var(--gold-soft);
+        }
+
+        .geotag-capsule {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(16, 42, 67, 0.5);
+            border: 0.5px solid rgba(207, 175, 109, 0.3);
+            border-radius: 100px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: var(--transition);
+            margin-bottom: 35px;
+        }
+        .geotag-capsule:hover {
+            background: var(--gold);
+            color: var(--bg);
+            box-shadow: 0 8px 20px rgba(207, 175, 109, 0.2);
+            border-color: transparent;
+        }
+        .geotag-capsule svg {
+            width: 14px;
+            height: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="modal">
+        <div class="modal-card">
+            <div class="modal-close" onclick="closeModal()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </div>
+            <h2 style="font-size: 2.2rem; margin-bottom: 40px;">Plan Your<br>Dream Escape.</h2>
+            <form id="inquiryForm">
+                <div class="form-group">
+                    <label class="form-label" for="name">Your Name</label>
+                    <input type="text" id="name" class="form-input" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="form-input" required placeholder="+91 ...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="horizon">Planning Horizon</label>
+                    <select id="horizon" class="form-input" style="background: var(--surface);">
+                        <option value="immediate">Next 30 Days</option>
+                        <option value="quarter">3-6 Months</option>
+                        <option value="future">Looking Ahead</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="trip">Destination</label>
+                    <input type="text" id="trip" class="form-input" required value="Curated Collection">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="travellers">Travellers</label>
+                    <input type="number" id="travellers" class="form-input" min="1" max="50" value="2">
+                </div>
+                <button type="submit" class="btn-luxe" id="submitBtn">Get My Personal Quote</button>
+            </form>
+            <p style="text-align: center; margin-top: 30px; font-size: 10px; opacity: 0.4; letter-spacing: 1px;">PREMIUM SERVICE BY WANDERSOUL TRAVELS</p>
+        </div>
+    </div>
+
+    <nav id="nav">
+        <div class="logo">wandersoul</div>
+        <div class="nav-items">
+            <a href="#trips" class="nav-link">Visual guide</a>
+            <a href="https://wa.me/919768995995?text=Hi%20Wandersoul" class="nav-link" target="_blank">Connect</a>
+            <a href="#" class="nav-link cta" id="headerBook">Get a Quote</a>
+        </div>
+    </nav>
+
+    <div id="hero">
+        <div class="hero-video-wrap">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="hero.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="volumetric-glow"></div>
+        <h1 class="hero-title" id="kineticHero">Your World,<br>Perfectly Curated.</h1>
+        <p class="hero-sub">Voted No.1 Luxury Travel Managed Service. Bespoke global itineraries crafted for the Indian Elite.</p>
+        <a href="#signature" class="btn-hero">Explore Signature Collections</a>
+    </div>
+
+    <!-- Unique Signature Section (Stacked Cards) -->
+    <section id="signature">
+        <div class="section-label">Signature Collections</div>
+        <div class="signature-deck" id="packageDeck">
+            <!-- Malaysia -->
+            <div class="package-card" data-itinerary='["Arrive at Kuala Lumpur International Airport followed by a private transfer to your luxury hotel. Evening exploration of the Petronas Twin Towers and vibrant night markets.", "Full day exploration of the Batu Caves, followed by a visit to the Genting Highlands for high-altitude serenity and entertainment.", "Discover the administrative heart of Putrajaya, known for its stunning architecture and botanical gardens. Enjoy a sunset dinner overlooking the lake.", "Morning leisure and final shopping at Bukit Bintang. Private transfer to the airport for your onward journey with Wandersoul memories."]'>
+                <div class="package-badge">Top Seller</div>
+                <div class="package-video-wrap">
+                    <video autoplay muted loop playsinline class="package-video">
+                        <source src="malaysia.mp4" type="video/mp4">
+                    </video>
+                    <div class="package-overlay"></div>
+                </div>
+                <div class="package-content">
+                    <span class="package-label">Limited Edition | 3 Nights 4 Days</span>
+                    <h2 class="package-title">Malaysia</h2>
+                    <div class="package-price-box">
+                        <span class="price-text">₹9,950/-</span>
+                        <span class="price-sub">All-inclusive Land Package (Min. 6 Pax)<br>Instant Visa Assistance Included</span>
+                    </div>
+                    <div class="inclusion-row">
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>Stay</div>
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Visa</div>
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8l4 4-4 4M8 12h8"></path></svg>Transfers</div>
+                    </div>
+                    <button class="btn-view-itinerary" style="margin-top: 40px;" onclick="showItinerary('Malaysia', this)">View Full Itinerary</button>
+                </div>
+            </div>
+
+            <!-- Thailand -->
+            <div class="package-card" data-itinerary='["Land in the Land of Smiles. Private transfer to your resort in Phuket or Krabi. Deep check-in and evening beachside relaxation.", "Full-day private longtail boat tour of the Phi Phi Islands. Snorkeling in crystal clear lagoons and a sunset dinner on a secluded beach.", "Cultural immersion with a visit to local temples and a high-end traditional Thai cooking experience or a premium spa therapy.", "Morning tropical breakfast by the sea. Final moments of serenity before a private transfer to the airport."]'>
+                <div class="package-badge">Premium Choice</div>
+                <div class="package-video-wrap">
+                    <video autoplay muted loop playsinline class="package-video">
+                        <source src="thailand.mp4" type="video/mp4">
+                    </video>
+                    <div class="package-overlay"></div>
+                </div>
+                <div class="package-content">
+                    <span class="package-label">Bespoke Escape | 3 Nights 4 Days</span>
+                    <h2 class="package-title">Thailand</h2>
+                    <div class="package-price-box">
+                        <span class="price-text">₹9,950/-</span>
+                        <span class="price-sub">All-inclusive Land Package (Min. 6 Pax)<br>24/7 Local Support Guarantee</span>
+                    </div>
+                    <div class="inclusion-row">
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>Resort</div>
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8l4 4-4 4M8 12h8"></path></svg>Tours</div>
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Meals</div>
+                    </div>
+                    <button class="btn-view-itinerary" style="margin-top: 40px;" onclick="showItinerary('Thailand', this)">View Full Itinerary</button>
+                </div>
+            </div>
+
+            <!-- Sri Lanka -->
+            <div class="package-card" data-itinerary='["Arrival in Colombo and direct transfer to the coastal town of Galle. Check into a heritage boutique property within the fort.", "Explore the historic Galle Fort on a guided walk. Afternoon visit to exotic tea plantations and a sunset lighthouse experience.", "Journey to Sigiriya for a morning climb of the Lion Rock. Experience the deep history and breathtaking views from the summit.", "Quiet morning in the colonial heart of the island. Last artisanal souvenir shopping before your private transfer to Colombo International."]'>
+                <div class="package-badge">Cultural Core</div>
+                <div class="package-video-wrap">
+                    <video autoplay muted loop playsinline class="package-video">
+                        <source src="srilanka.mp4" type="video/mp4">
+                    </video>
+                    <div class="package-overlay"></div>
+                </div>
+                <div class="package-content">
+                    <span class="package-label">Heritage Discovery | 3 Nights 4 Days</span>
+                    <h2 class="package-title">Sri Lanka</h2>
+                    <div class="package-price-box">
+                        <span class="price-text">₹9,950/-</span>
+                        <span class="price-sub">All-inclusive Land Package (Min. 6 Pax)<br>Verified Professional Guides</span>
+                    </div>
+                    <div class="inclusion-row">
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>Guide</div>
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>Boutique</div>
+                        <div class="inclusion-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Tea Exp.</div>
+                    </div>
+                    <button class="btn-view-itinerary" style="margin-top: 40px;" onclick="showItinerary('Sri Lanka', this)">View Full Itinerary</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Itinerary Overlay Container -->
+    <div id="itineraryOverlay">
+        <div class="close-itin" onclick="hideItinerary()">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </div>
+        <div class="itin-header">
+            <h2 class="itin-dest" id="itinDestName">Malaysia</h2>
+            <div class="badge" style="display:inline-block">Curated Formation</div>
+        </div>
+        <div class="itin-days-scroll" id="itinDaysContainer">
+            <!-- Days injected here -->
+        </div>
+        <div style="text-align: center; margin-top: 80px;">
+            <button class="btn-luxe" style="max-width: 400px;" id="itinBookBtn">Reserve This Experience</button>
+        </div>
+    </div>
+
+    <!-- India Trust Foundation Section -->
+    <section id="trust">
+        <div class="section-label">Our Service Promise</div>
+        <h2 style="font-size: 3.5rem; letter-spacing: -2px; margin-bottom: 60px; text-align: center;">Why India Travels<br>With Wandersoul.</h2>
+
+        <div class="trust-stats">
+            <div class="stat-card">
+                <div class="stat-num" data-val="12000">0</div>
+                <div class="stat-label">Happy Travellers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" data-val="98">0</div>
+                <div class="stat-label">Bliss Satisfaction</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" data-val="45">0</div>
+                <div class="stat-label">Global Destinations</div>
+            </div>
+        </div>
+        <div class="trust-partners">
+            <span class="partner-logo">The Ritz-Carlton</span>
+            <span class="partner-logo">Emirates</span>
+            <span class="partner-logo">Aman Resorts</span>
+            <span class="partner-logo">Six Senses</span>
+            <span class="partner-logo">Marriott Bonvoy</span>
+        </div>
+    </section>
+
+    <!-- Indian Soul Stories (Testimonials) -->
+    <section id="soul-stories">
+        <div class="section-label" style="letter-spacing: 6px; font-weight: 800; opacity: 0.9;">Soul Stories</div>
+        <div class="scroll-hint">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <span style="font-size: 8px; text-transform: uppercase;">Discover</span>
+        </div>
+        <div class="stories-container">
+            <div class="story-card">
+                <div class="quote-icon">“</div>
+                <p class="story-text">Loved the way they organized trip ❤️❤️ It was an amazing experience with wander soul team. Their team has well organized and did great planning beyond expectations to make our trip unforgettable. From seamless planning to incredible service, they truly exceeded our travel expectations. Highly recommend them for their well organised planning, professionalism, support and co-operation and warm hospitality.</p>
+                <div class="story-author">
+                    <div class="author-avatar">SM</div>
+                    <div class="author-info">
+                        <div class="author-name">Sandeep Munkar</div>
+                        <div class="author-trip">Verified Review</div>
+                    </div>
+                </div>
+            </div>
+            <div class="story-card">
+                <div class="quote-icon">“</div>
+                <p class="story-text">I just returned from a trip organized by Wander Soul last week, and I am still buzzing from the experience. If you are looking for more than just a standard sightseeing tour, this is the agency to choose. They truly live up to their name by crafting "soulful" journeys that connect you deeply with the destination. From the very first inquiry, the team was professional and incredibly attentive.</p>
+                <div class="story-author">
+                    <div class="author-avatar">GK</div>
+                    <div class="author-info">
+                        <div class="author-name">Govind Kumar</div>
+                        <div class="author-trip">Verified Review</div>
+                    </div>
+                </div>
+            </div>
+            <div class="story-card">
+                <div class="quote-icon">“</div>
+                <p class="story-text">One of the best travel agency in my contacts with a proper guidance. Highly recommended for international trips. They truly know how to craft a soulful journey.</p>
+                <div class="story-author">
+                    <div class="author-avatar">RV</div>
+                    <div class="author-info">
+                        <div class="author-name">Rohit Verma</div>
+                        <div class="author-trip">Verified Review</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Indian Market Discoveries (Bento Grid) -->
+    <section id="discoveries">
+        <div class="section-label">Travel Insights for the Modern Indian</div>
+        <div class="discovery-grid">
+            <div class="discovery-card large">
+                <div class="disc-img" style="background-image: url('https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&q=80&w=1200')"></div>
+                <div class="disc-content">
+                    <span class="disc-tag">Travel Guide</span>
+                    <h2 class="disc-title">Visa-Free Wonders for Indian Passports</h2>
+                    <p class="disc-excerpt">Explore 20+ exotic destinations where your Indian passport gets you instant access with zero visa hassles.</p>
+                </div>
+            </div>
+            <div class="discovery-card">
+                <div class="disc-img" style="background-image: url('https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&q=80&w=800')"></div>
+                <div class="disc-content">
+                    <span class="disc-tag">Shopping</span>
+                    <h2 class="disc-title">Dubai's Hidden Luxe Boutiques</h2>
+                    <p class="disc-excerpt">Beyond the malls: A curated guide to high-end artisanal shopping in the heart of the Emirates.</p>
+                </div>
+            </div>
+            <div class="discovery-card">
+                <div class="disc-img" style="background-image: url('https://images.unsplash.com/photo-1596422846543-75c6fc18a593?auto=format&fit=crop&q=80&w=800')"></div>
+                <div class="disc-content">
+                    <span class="disc-tag">Family Luxe</span>
+                    <h2 class="disc-title">Multi-Gen Travel Made Easy</h2>
+                    <p class="disc-excerpt">How Wandersoul designs itineraries that keep both kids and grandparents equally enchanted.</p>
+                </div>
+            </div>
+            <div class="discovery-card wide">
+                <div class="disc-img" style="background-image: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&q=80&w=1200')"></div>
+                <div class="disc-content">
+                    <span class="disc-tag">Service Elite</span>
+                    <h2 class="disc-title">24/7 Ground Support: Our Promise</h2>
+                    <p class="disc-excerpt">Never feel alone in a foreign land. Learn how our dedicated ground teams manage every detail of your trip.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overlay Wrapper -->
+    <div id="overlay">
+        <button class="overlay-close" id="closeOverlay">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="overlay-header">
+            <div class="overlay-img" id="overlayImg"></div>
+        </div>
+        <div class="itinerary-wrap">
+            <h2 class="itinerary-title" id="overlayTitle"></h2>
+            <div class="itinerary-badges">
+                <div class="badge">Nature</div> <div class="badge">Private</div> <div class="badge">Luxe 2.0</div>
+            </div>
+            
+            <div id="itineraryContent">
+                <div class="timeline-item">
+                    <div class="day-mark">1</div>
+                    <h3 class="item-title">Arrival & Deep Check-in</h3>
+                    <p class="item-desc">Touch down into a world curated for silence. Private transfer to your secluded villa followed by a personalized welcome formation.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="day-mark">2</div>
+                    <h3 class="item-title">Core Submersion</h3>
+                    <p class="item-desc">A day dedicated to physical and mental resets. Private wellness experts will guide you through localized rituals and high-end spas.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="day-mark">3</div>
+                    <h3 class="item-title">Horizon Exploration</h3>
+                    <p class="item-desc">Witness the landscape from perspectives only available to the few. A private helicopter or yacht wait to take you beyond the visible.</p>
+                </div>
+            </div>
+
+            <button class="btn-luxe" id="inlineBook">Reserve This Experience</button>
+        </div>
+    </div>
+
+    <!-- WhatsApp Floating (Heaven Edition) -->
+    <a href="https://wa.me/919768995995" class="floating-cta" target="_blank">
+        <svg fill="var(--bg)" width="24" height="24" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.431 5.63 1.431h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="footer-logo">wandersoul</div>
+            <p class="footer-mission">India's leading luxury travel managed service. We don't just book trips; we craft lifelong memories with 24/7 global support.</p>
+            <a href="https://share.google/em3LaVmUvh8bKlhPe" target="_blank" class="geotag-capsule">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Find us in Kalyan
+            </a>
+            <div class="footer-links">
+                <div class="link-group">
+                    <span class="link-title">Experiences</span>
+                    <a href="#signature">Malaysia Signature</a>
+                    <a href="#signature">Thailand Core</a>
+                    <a href="#signature">Sri Lanka Deep</a>
+                </div>
+                <div class="link-group">
+                    <span class="link-title">Connect</span>
+                    <a href="tel:+919768995995">Call: +91 9768 995 995</a>
+                    <a href="mailto:ops07.wandersoul@gmail.com">ops07.wandersoul@gmail.com</a>
+                    <a href="https://wa.me/919768995995" target="_blank">WhatsApp Support</a>
+                    <a href="https://www.instagram.com/wanderr.soul_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">Instagram</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 WANDERSOUL. ALL RIGHTS RESERVED.</p>
+                <p>DESIGNED FOR THE HEAVENS.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const heroTitle = document.getElementById('kineticHero');
+        const nav = document.getElementById('nav');
+        const modal = document.getElementById('modal');
+        const inquiryForm = document.getElementById('inquiryForm');
+
+        // Cinematic Hero Animation & Scroll Handling
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY;
+            
+            // Smoother kinetic scaling
+            const scale = 1 + (y * 0.0003);
+            const blur = Math.min(10, y * 0.02);
+            heroTitle.style.transform = `scale(${scale}) translateY(${y * 0.25}px)`;
+            heroTitle.style.opacity = 1 - (y * 0.0015);
+            heroTitle.style.filter = `blur(${blur}px)`;
+
+            // Progressive ELONGATING Nav Adaptation
+            const scrollThreshold = 350;
+            const progress = Math.min(y / scrollThreshold, 1);
+            
+            // Width from 45% (pill) to 95% (bar)
+            const navWidth = 45 + (progress * 50); 
+            const navTop = 25 - (progress * 13); // 25px to 12px
+            const navRadius = 40 - (progress * 24); // 40px to 16px
+            const navBgOpacity = 0.65 + (progress * 0.3); // 0.65 to 0.95
+            const navHeight = 64 - (progress * 10); // 64px to 54px
+            const navGap = progress * 12; // 0px to 12px
+            
+            // Content visibility for links
+            const itemsOpacity = Math.max(0, (progress - 0.3) / 0.7); // Reveal after 30% scroll
+            const itemsPointer = progress > 0.8 ? 'auto' : 'none';
+
+            nav.style.setProperty('--nav-width', `${navWidth}%`);
+            nav.style.setProperty('--nav-top', `${navTop}px`);
+            nav.style.setProperty('--nav-radius', `${navRadius}px`);
+            nav.style.setProperty('--nav-bg-opacity', navBgOpacity);
+            nav.style.setProperty('--nav-height', `${navHeight}px`);
+            nav.style.setProperty('--nav-gap', `${navGap}px`);
+            nav.style.setProperty('--nav-items-opacity', itemsOpacity);
+            nav.style.setProperty('--nav-items-pointer', itemsPointer);
+
+            // SYNC Floating CTA with Dynamic Island (Disappear on elongate)
+            const cta = document.querySelector('.floating-cta');
+            if(cta) {
+                cta.style.opacity = progress > 0.4 ? '0' : '1';
+                cta.style.pointerEvents = progress > 0.4 ? 'none' : 'auto';
+            }
+        });
+
+        // Modal System
+        function openModal(tripName = "Curated Discovery") {
+            const tripInput = document.getElementById('trip');
+            if(tripInput) tripInput.value = tripName;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openAndPreFill(dest) {
+            openModal(dest);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on escape or outside click
+        modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+        // Bind Buttons
+        document.getElementById('headerBook').onclick = (e) => { e.preventDefault(); openModal(); };
+        document.getElementById('inlineBook').onclick = () => openModal(overlayTitle.textContent);
+
+        // Overlay & Itinerary
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.getElementById('overlayTitle');
+        const overlayImg = document.getElementById('overlayImg');
+        const closeOverlay = document.getElementById('closeOverlay');
+        const timelineItems = document.querySelectorAll('.timeline-item');
+
+        document.querySelectorAll('.trip-card').forEach(card => {
+            card.onclick = () => {
+                overlayTitle.textContent = card.dataset.title;
+                overlayImg.style.backgroundImage = `url('${card.dataset.img}')`;
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Staggered trigger for timeline items
+                setTimeout(() => {
+                    timelineItems.forEach((item, i) => {
+                        setTimeout(() => item.classList.add('active'), i * 200);
+                    });
+                }, 400);
+            };
+        });
+
+        closeOverlay.onclick = () => {
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            timelineItems.forEach(item => item.classList.remove('active'));
+        };
+
+        // Form Logic
+        inquiryForm.onsubmit = (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.textContent = "Summoning Connection...";
+            btn.style.opacity = "0.7";
+            
+            setTimeout(() => {
+                btn.textContent = "Message Sent to the Heavens";
+                btn.style.background = "#25D366";
+                btn.style.color = "white";
+                alert("The Wandersoul has received your message. Expect a connection shortly.");
+                closeModal();
+            }, 2000);
+        };
+
+        // Scroll Reveal for Packages
+        const packageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.package-card').forEach(card => packageObserver.observe(card));
+
+        // Itinerary System
+        const itinOverlay = document.getElementById('itineraryOverlay');
+        const itinDestName = document.getElementById('itinDestName');
+        const itinDaysContainer = document.getElementById('itinDaysContainer');
+
+        function showItinerary(dest, btn) {
+            const card = btn.closest('.package-card');
+            const itinerary = JSON.parse(card.dataset.itinerary);
+            
+            itinDestName.textContent = dest;
+            itinDaysContainer.innerHTML = '';
+            
+            itinerary.forEach((p, i) => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'itin-day-card';
+                dayCard.innerHTML = `
+                    <div class="day-num">${i + 1}</div>
+                    <h3 class="day-title">Day ${i + 1}</h3>
+                    <p class="day-body">${p}</p>
+                `;
+                itinDaysContainer.appendChild(dayCard);
+            });
+
+            itinOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Staggered trigger for days
+            setTimeout(() => {
+                document.querySelectorAll('.itin-day-card').forEach((el, index) => {
+                    setTimeout(() => el.classList.add('active'), index * 150);
+                });
+            }, 400);
+
+            // Bind book button
+            document.getElementById('itinBookBtn').onclick = () => {
+                hideItinerary();
+                openModal(dest);
+            };
+        }
+
+        function hideItinerary() {
+            itinOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.querySelectorAll('.itin-day-card').forEach(el => el.classList.remove('active'));
+        }
+
+        // Trust Stats Counter Logic
+        const statNums = document.querySelectorAll('.stat-num');
+        const trustSection = document.querySelector('#trust');
+        let triggered = false;
+
+        const observer = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting && !triggered) {
+                triggered = true;
+                statNums.forEach(num => {
+                    const target = +num.dataset.val;
+                    const increment = target / 50;
+                    const updateCount = () => {
+                        const current = +num.innerText;
+                        if(current < target) {
+                            num.innerText = Math.ceil(current + increment);
+                            setTimeout(updateCount, 40);
+                        } else {
+                            num.innerText = target + (num.dataset.val === "98" ? "%" : "+");
+                        }
+                    };
+                    updateCount();
+                });
+            }
+        }, { threshold: 0.5 });
+
+        observer.observe(trustSection);
+    </script>
+</body>
+</html>
