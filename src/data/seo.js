@@ -111,10 +111,17 @@ export const organizationLd = (base = '') => ({
   contactPoint: [
     {
       '@type': 'ContactPoint',
+      name: 'WhatsApp',
       contactType: 'customer service',
-      telephone: '+91-97689-95995',
+      telephone: '+91-91509-95995',
       email: site.email,
       ...(trust.languages ? { availableLanguage: trust.languages } : {}),
+    },
+    {
+      '@type': 'ContactPoint',
+      name: 'Phone',
+      contactType: 'customer service',
+      telephone: '+91-97689-95995',
     },
   ],
   sameAs: [site.instagram, ...trust.reviews.map((r) => r.url), ...trust.memberships.map((m) => m.url).filter(Boolean)],

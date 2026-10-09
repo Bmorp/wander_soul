@@ -22,7 +22,7 @@ export default class ErrorBoundary extends Component {
       <section className="page-hero page-hero--md">
         <div className="wrap page-hero-body">
           <h1 className="t-hero display">Something went wrong</h1>
-          <p className="t-lead">Please refresh the page. If it keeps happening, message us on WhatsApp at {site.phoneDisplay}.</p>
+          <p className="t-lead">Please refresh the page. If it keeps happening, message us on WhatsApp at {site.whatsappDisplay}.</p>
           <div className="cta-row">
             <a className="btn btn-gold" href="/">
               Back to the home page

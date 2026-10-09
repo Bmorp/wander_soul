@@ -15,11 +15,20 @@ let frame = 0;
 
 const limit = () => (window.matchMedia('(max-width: 767px)').matches ? 1 : 2);
 
-// Is something else painted over the middle of this film?
+// Is something else painted over the middle of this film? The middle that counts is the
+// middle of the part on screen. (The middle of the whole film can be off screen, and was then
+// pushed to the screen's edge: scrolling up into a tall film, that edge is the fixed top bar,
+// so the film was judged covered and sat on its still picture until it was well in view,
+// while the same film scrolled into from above played at once.)
 function covered(el) {
   const r = el.getBoundingClientRect();
-  const x = Math.min(Math.max(r.left + r.width / 2, 1), window.innerWidth - 2);
-  const y = Math.min(Math.max(r.top + r.height / 2, 1), window.innerHeight - 2);
+  const left = Math.max(r.left, 0);
+  const right = Math.min(r.right, window.innerWidth);
+  const top = Math.max(r.top, 0);
+  const bottom = Math.min(r.bottom, window.innerHeight);
+  if (right <= left || bottom <= top) return false;
+  const x = Math.min(Math.max((left + right) / 2, 1), window.innerWidth - 2);
+  const y = Math.min(Math.max((top + bottom) / 2, 1), window.innerHeight - 2);
   const hit = document.elementFromPoint(x, y);
   // The opening's curtain lifts into the film, so the film runs beneath it.
   if (!hit || hit.closest('.intro')) return false;

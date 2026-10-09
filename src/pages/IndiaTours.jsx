@@ -20,7 +20,7 @@ import { indiaToursFaq } from '../data/faq';
 const ABROAD_MESSAGE = 'Hello Wander Soul, I am planning a trip to India and would like help with a tour.';
 
 const STEPS = [
-  { title: 'Message us', body: `WhatsApp ${site.phoneDisplay} or email ${site.email} with your dates and the places you’d like to see.` },
+  { title: 'Message us', body: `WhatsApp ${site.whatsappDisplay} or email ${site.email} with your dates and the places you’d like to see.` },
   { title: 'Get your route and price', body: 'Your planner sends a day-by-day route, the stays and the price, and adjusts it with you.' },
   { title: 'Travel India with us', body: 'Arrive to a plan that’s ready, with someone to message on WhatsApp, 24/7, throughout.' },
 ];

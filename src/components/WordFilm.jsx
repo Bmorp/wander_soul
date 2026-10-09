@@ -135,10 +135,12 @@ export default function WordFilm({ video, word = 'भारत', reading = 'bhā
         defaults: { ease: 'none' },
         scrollTrigger: { trigger: section.current, start: 'top top', end: 'bottom bottom', scrub: true, onUpdate: live, onRefresh: live },
       });
+      // Every segment states where it starts (and none renders early), so the timeline never
+      // depends on the order it was first drawn in: scrolling back plays exactly the way down.
       tl.fromTo(mask.current, { scale: 0.94 }, { scale: 1, duration: 0.12 })
-        .to(hint.current, { autoAlpha: 0, y: -10, duration: 0.08 }, 0.1)
-        .to(mask.current, { scale: geo.scale, duration: 0.56, ease: 'power3.in' }, 0.14)
-        .to(mask.current, { autoAlpha: 0, duration: 0.06 }, 0.64)
+        .fromTo(hint.current, { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -10, duration: 0.08, immediateRender: false }, 0.1)
+        .fromTo(mask.current, { scale: 1 }, { scale: geo.scale, duration: 0.56, ease: 'power3.in', immediateRender: false }, 0.14)
+        .fromTo(mask.current, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.06, immediateRender: false }, 0.64)
         .fromTo(copy.current, { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: 0.16, ease: 'expo.out' }, 0.72)
         .to({}, { duration: 0.12 });
     }, section);

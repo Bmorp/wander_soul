@@ -33,7 +33,7 @@ const NAV = [
 
 const contactBlock = () =>
   `<section><h2>Contact Wander Soul</h2>${list([
-    `WhatsApp: ${link(waLink(generalMessage), site.phoneDisplay)}`,
+    `WhatsApp: ${link(waLink(generalMessage), site.whatsappDisplay)}`,
     `Phone: ${link(site.phoneHref, site.phoneDisplay)}`,
     `Email: ${link(`mailto:${site.email}`, site.email)}`,
     `Instagram: ${link(site.instagram, site.instagramHandle)}`,

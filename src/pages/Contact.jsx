@@ -226,7 +226,7 @@ export default function Contact() {
 
             <fieldset className="fieldset">
               <legend>How do we reach you?</legend>
-              <p className="hint">We reply on WhatsApp from {site.phoneDisplay}.</p>
+              <p className="hint">We reply on WhatsApp from {site.whatsappDisplay}.</p>
               <div className="fields-2">
                 <div>
                   <div className={`field${tried && !nameOk ? ' is-invalid' : ''}`}>
@@ -306,7 +306,7 @@ export default function Contact() {
             </p>
             <div className="aside-list">
               <a href={waLink(generalMessage)} target="_blank" rel="noopener noreferrer">
-                <Icon name="whatsapp" /> WhatsApp {site.phoneDisplay}
+                <Icon name="whatsapp" /> WhatsApp {site.whatsappDisplay}
               </a>
               <a href={site.phoneHref}>
                 <Icon name="phone" /> Call {site.phoneDisplay}

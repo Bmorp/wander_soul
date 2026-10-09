@@ -3,7 +3,9 @@ export const site = {
   tagline: 'Travel with feeling.',
   phoneDisplay: '+91 97689 95995',
   phoneHref: 'tel:+919768995995',
-  whatsappNumber: '919768995995',
+  // Every WhatsApp button and link on the site goes to this number (see waLink below).
+  whatsappNumber: '919150995995',
+  whatsappDisplay: '+91 91509 95995',
   email: 'ops07.wandersoul@gmail.com',
   instagram: 'https://www.instagram.com/wanderr.soul_',
   instagramHandle: '@wanderr.soul_',

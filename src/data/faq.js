@@ -51,7 +51,7 @@ export const indiaToursFaq = [
   },
   {
     q: 'How do we talk before the trip?',
-    a: `On WhatsApp at ${site.phoneDisplay}, or by email at ${site.email}. You’ll get a reply from a real person, not a bot.`,
+    a: `On WhatsApp at ${site.whatsappDisplay}, or by email at ${site.email}. You’ll get a reply from a real person, not a bot.`,
   },
   {
     q: 'What time zone are you in?',

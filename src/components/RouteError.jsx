@@ -14,7 +14,7 @@ export default function RouteError() {
     <section className="page-hero page-hero--md">
       <div className="wrap page-hero-body">
         <h1 className="t-hero display">This page didn’t load</h1>
-        <p className="t-lead">Check your connection and try again. If it keeps happening, message us on WhatsApp at {site.phoneDisplay}.</p>
+        <p className="t-lead">Check your connection and try again. If it keeps happening, message us on WhatsApp at {site.whatsappDisplay}.</p>
         <div className="cta-row">
           <button type="button" className="btn btn-gold" onClick={() => window.location.reload()}>
             Try again

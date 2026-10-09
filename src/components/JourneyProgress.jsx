@@ -28,9 +28,15 @@ export default function JourneyProgress() {
     const el = ref.current;
     const wide = window.matchMedia(WIDE);
     let frame = 0;
+    let lastY = window.scrollY;
     const update = () => {
       frame = 0;
       if (!wide.matches) return;
+      // The plane faces the way you are going: down the page, or back up it.
+      if (Math.abs(window.scrollY - lastY) > 2) {
+        el.dataset.dir = window.scrollY > lastY ? 'down' : 'up';
+        lastY = window.scrollY;
+      }
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
       el.style.setProperty('--p', p.toFixed(4));

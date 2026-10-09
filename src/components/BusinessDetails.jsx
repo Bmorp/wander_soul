@@ -13,7 +13,7 @@ export default function BusinessDetails() {
   const rows = [
     trust.legalName && ['Registered as', trust.legalName],
     ['Based in', trust.address ? `${trust.address}, ${site.city}, India` : `${site.city}, Maharashtra, India`],
-    ['WhatsApp', <a key="wa" href={waLink(generalMessage)} {...ext}>{site.phoneDisplay}</a>],
+    ['WhatsApp', <a key="wa" href={waLink(generalMessage)} {...ext}>{site.whatsappDisplay}</a>],
     ['Email', <a key="mail" href={`mailto:${site.email}`}>{site.email}</a>],
     ['Time zone', TIME_ZONE],
     trust.languages && ['Languages', trust.languages],
