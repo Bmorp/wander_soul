@@ -1,0 +1,12 @@
+# Cache rules for Cloudflare Pages and Netlify (the same ones vercel.json sets for Vercel).
+# Built files carry a hash in their name, so they can be kept for a year; the page itself
+# (index.html) is not listed and is checked on every visit, so a new deploy shows at once.
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/films/*
+  Cache-Control: public, max-age=2592000
+
+/brand/*
+  Cache-Control: public, max-age=2592000

@@ -1,13 +1,26 @@
 {
-  "name": "wandersoul-secured",
-  "version": "1.0.0",
+  "name": "wandersoul-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sitemap": "node scripts/sitemap.mjs",
+    "check:seo": "node scripts/seo-check.mjs"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
-    "vite": "^5.0.0",
-    "terser": "^5.0.0"
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.0"
   }
 }

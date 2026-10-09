@@ -1,0 +1,4 @@
+# Vercel builds the site itself, so the built copy is not uploaded. (Uploaded files count
+# toward the free plan's 100 MB limit; dist/ alone is about 50 MB.)
+dist
+.DS_Store

@@ -1,29 +1,38 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/trips", "destination": "/holidays", "permanent": true },
+    { "source": "/tour", "destination": "/holidays", "permanent": true },
+    { "source": "/tour.html", "destination": "/holidays", "permanent": true },
+    { "source": "/services", "destination": "/how-it-works", "permanent": true },
+    { "source": "/services.html", "destination": "/how-it-works", "permanent": true },
+    { "source": "/profile", "destination": "/account", "permanent": true },
+    { "source": "/profile.html", "destination": "/account", "permanent": true },
+    { "source": "/itinerary", "destination": "/account", "permanent": true },
+    { "source": "/itinerary.html", "destination": "/account", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; media-src 'self' https: data:; font-src 'self' https: fonts.gstatic.com;"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
-        }
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
       ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/films/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
+    },
+    {
+      "source": "/brand/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }]
     }
   ]
 }
